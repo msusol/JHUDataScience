@@ -1,5 +1,5 @@
-Getting and Cleaning Data Course Project - CodeBook
-===================================================
+# Getting and Cleaning Data Course Project - CodeBook
+
 This file describes the variables, the data, and any transformations or work performed to clean up the data.
 
 The raw dataset ZIP file for the project:
@@ -33,7 +33,7 @@ Features read from "features.txt"
  * save the data frame to "uciHarDataset.rda" for faster import on opening project
  * dim(data) = 10299 obs x 564 variables
  
-#Measurements:
+##Measurements:
  * the interpretation of the directions resulted in selecting only those values with both a mean() and a std() value present in the data. it is assumed this to be a "measurement" whether directly measured as a signal, or derived as such.
  * any duplicate columns of data were removed. dim(data) = 10299 obs x 480 variables
  * selecting only the measurements desired, select()/gather()/group_by()/summarize(mean(value)) was used to derive a LONG data format taking the mean (AVERAGE) of the mean()- and std()- values.
@@ -43,7 +43,7 @@ Features read from "features.txt"
 ##Tidy Data Output:
  * the tidy dataset was exported to .txt file as directed via write.table with row.names = F.
  
-## Column Names:
+##Column Names:
 
 ```
 "subject"                   
