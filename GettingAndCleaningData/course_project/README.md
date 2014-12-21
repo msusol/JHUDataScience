@@ -3,7 +3,7 @@ Getting and Cleaning Data Course Project
 
 The purpose of this project is to demonstrate the ability to collect, work with, and clean a data set. The goal is to prepare tidy data that can be used for later analysis. 
 
-## Prelude: 
+# Prelude: 
 One of the most exciting areas in all of data science right now is wearable computing Companies like Fitbit, Nike, and Jawbone Up are racing to develop the most advanced algorithms to attract new users.
 - see for example this article:  
 <http://www.insideactivitytracking.com/data-science-activity-tracking-and-the-battle-for-the-worlds-top-sports-brand/>
@@ -18,13 +18,13 @@ The sensor signals (accelerometer and gyroscope) were pre-processed by applying 
 Here is the data for the project: 
   <https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip>
 
-# Plot 1: Partitioning of Training vs Test Data
+Plot 1: Partitioning of Training vs Test Data
 ![plot of plot1](plot1.png) 
 
-# Plot 2: Subject's Activity Data
+Plot 2: Subject's Activity Data
 ![plot of plot2](plot2.png) 
 
-## The Cleaning Script:  run_analysis.R
+# The Cleaning Script:  run_analysis.R
 
 A single R script called run_analysis.R is built that does the following.
 * Downloads & extracts the source ZIP file. 
@@ -35,12 +35,11 @@ A single R script called run_analysis.R is built that does the following.
 
 note(1): the average of the standard deviation was a directive of the project.
 
-## The Clean Dataset:  tidyData.txt and CodeBook.md
+# The Clean Dataset:  tidyData.txt and CodeBook.md
 
-The clean & tidy dataset useable for further analysis, is provided in a WIDE data.frame format via a .txt file. You can load the text file and view the clean dataset simply by:
+The clean & tidy dataset useable for further analysis, is provided in a WIDE data.frame format via a .txt file. You can load the clean dataset (tidyData) into R simply by:
 
----
+```
 tidyData <- read.table("tidyData.txt", header = T)
-View(tidyData)
----
+```
 the dimensions of tidyData are: 180 observations - 68 variables.
