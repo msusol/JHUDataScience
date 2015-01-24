@@ -1,0 +1,74 @@
+#### "Analysis of Fuel Consumption in Automatic and Manual Transmission Automobiles (1973–74 models)."
+**Mark Susol**, mock writer for US Motor Trend Magazine, Wednesday, January 21, 2015
+
+In this analysis, we aim to examine the fuel consumption of 1973–74 model automobiles as it relates to different aspects of automobile design and performance. The main factor around which we will categorize the analysis will be the type of transmision, automatic or manual. Dependency on the remaining design aspects will be further evaluated to look to quantify the differences observed, if any, in fuel consumption between transmission types.
+
+#### Exploratory Data Analysis
+The data (mtcars in R) was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models). The type of transmission, Automatic vs Manual, will be used as a Factor variable in the analysis. We are interested in modeling how the remaining design aspects possibly confound the fuel consumption, characterized by the Miles per Gallon (MPG).
+
+```{r , echo=FALSE}
+data(mtcars)
+mtcars$am <- factor(mtcars$am, labels=c("Automatic", "Manual"))
+fit <- lm(mpg ~ ., data=mtcars)
+```
+
+On first Analysis, the rain in spain
+```{r , echo=FALSE}
+library(car)
+vif(fit)
+```
+
+Now look at Figure in spain..
+
+
+#### Model Selection
+
+```{r}
+fit1 <- lm(mpg ~ factor(am) + wt, data=mtcars)
+fit2 <- update(fit1, mpg ~ factor(am) + wt + factor(am)*wt)
+fit3 <- update(fit1, mpg ~ factor(am) + wt + factor(am)*wt + hp)
+fit4 <- update(fit1, mpg ~ factor(am) + wt + factor(am)*wt + hp + qsec + factor(am)*qsec)
+anova(fit1,fit2,fit3,fit4)
+```
+
+shows low R^2, but low p, thus large variance  : residual variance! SHOW PLOT
+
+#### Conclusion
+the rain in spain
+
+#### Appendix
+
+```{r, echo=FALSE}
+
+
+
+```
+
+##### Figure 2
+```{r, echo=FALSE}
+## ex: http://www.statmethods.net/advgraphs/ggplot2.html
+## http://docs.ggplot2.org/current/geom_abline.html
+library(ggplot2)
+library(grid)
+library(gridExtra)
+
+plot1 <- qplot(hp, mpg, data=mtcars, geom=c("point", "smooth"), 
+               method="lm", formula=y~x, color=am, ylim=c(5,35),
+               main="MPG on HP", xlab="Horse Power", ylab="Miles per Gallon (MPG)"
+               ) + theme(legend.position = "none")
+
+plot2 <- qplot(qsec, mpg, data=mtcars, geom=c("point", "smooth"), 
+               method="lm", formula=y~x, color=am, ylim=c(5,35),
+               main="MPG on QSEC", xlab="Quarter Mile Acceleration", ylab="Miles per Gallon (MPG)"
+               ) + theme(legend.position = "none")
+
+plot3 <- qplot(wt, mpg, data=mtcars, geom=c("point", "smooth"), 
+               method="lm", formula=y~x, color=am, ylim=c(5,35), 
+               main="MPG on Weight", xlab="Weight (x1000lbs)", ylab="Miles per Gallon (MPG)"
+               ) + theme(legend.position = c(0.85, 0.9))
+
+grid.arrange(plot1, plot2, plot3, nrow=1, ncol=3)
+```
+
+###### Source File for this report <>
+###### ©2015 Mark Susol, completed for a Coursera Class Assignment in [Regression Models](https://class.coursera.org/regmods-010) 
