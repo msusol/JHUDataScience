@@ -4,9 +4,9 @@ title: 'Modeling Fuel Consumption in (''73-''74) Automobiles: Automatic vs. Manu
 author: "Mark Susol, mock writer for US Motor Trend Magazine"
 date: "21 January, 2015"
 output:
-  html_document: default
   pdf_document:
     fig_crop: no
+  html_document: default
 ---
 In this analysis, we aim to examine the fuel consumption of 1973–74 model automobiles as it relates to different aspects of automobile design and performance. The main factor around which we will categorize the analysis will be the type of transmission, automatic or manual. Dependency on the remaining design aspects will be further evaluated to look to quantify the differences observed, if any, in fuel consumption between transmission types.
 
@@ -53,39 +53,53 @@ $$ factor(am) + wt + factor(am) wt + hp - 1 $$
 ```{r, echo=FALSE}
 # will set the fit here since it may need to be changed in this section. define only once in .Rmd
 fit <- lm(mpg ~ factor(am) + wt + factor(am)*wt + hp - 1, data=mtcars)
+
+# custom fnction to get at p-value
+lmp <- function (modelobject) {
+    if (class(modelobject) != "lm") stop("Not an object of class 'lm' ")
+    f <- summary(modelobject)$fstatistic
+    p <- pf(f[1],f[2],f[3],lower.tail=F)
+    attributes(p) <- NULL
+    return(p)
+}
+
+# create vars for printing the coefficients
+b0.0  <- signif(summary(fit)$coef[1], digits = 4)
+b0.1  <- signif(summary(fit)$coef[2], digits = 4)
+bwt.0 <- signif(summary(fit)$coef[3], digits = 3)
+bhp   <- signif(summary(fit)$coef[4], digits = 1)
+bwt.1 <- signif(summary(fit)$coef[5], digits = 1)
+# calculate change in hp for 1.0 mpg change
+dhp <- abs(signif(1/bhp, digits=3))
 ```
 
 **CONCLUSION**
 
-We have concluded that there is in fact a quantifiable difference in fuel consumption between manual and automatic transmissions in the models studied. The model selected was determined to have a $R^2 = 0.99$ and a $p-value = 2.2e-16$ which suggests that it accounts for the significant variance in the data. Which transmission is better for fuel consumption, depends on the model and specific design aspects involved.
+We have concluded that there is in fact a quantifiable difference in fuel consumption between manual and automatic transmissions in the models studied. The model selected was determined to have a $R^2 = `r summary(fit)$r.squared`$ and a $p-value = `r lmp(fit)`$ which suggests that it accounts for the significant variance in the data. Which transmission is better for fuel consumption, depends on the model and specific design aspects involved.
 
 The model can be presented as:
-$$ E[mpg]Automatic =  30.95 - 2.52 * wt - 0.03 hp $$
-$$ E[mpg]Manual    =  42.50 - 6.09 * wt - 0.03 hp $$
+$$ E[mpg]Automatic =  `r b0.0` + `r bwt.0` * wt + `r bhp` * hp $$
+$$ E[mpg]Manual    =  `r b0.1` + `r bwt.0 + bwt.1` * wt + `r bhp` * hp $$
 
 We can infer from this model that:
 
-- for every 1000 lb increase in weight, we expect a 2.5 (6.1) decrease in MPG for an Automatic (Manual) transmission, holding all other variables constant.
-- for every 33.3 increase in hp, we expect a 1.0 decrease in MPG for either transmission, holding all other variables constant.
+- for every 1000 lb increase in weight, we expect a `r abs(bwt.0)` (`r abs(bwt.0 + bwt.1)`) decrease in MPG for an Automatic (Manual) transmission, holding all other variables constant.
+- for every `r dhp` increase in hp, we expect a 1.0 decrease in MPG for either transmission, holding all other variables constant.
 
 ```{r, echo=FALSE}
 ## should use a predict function using fit, but time is running short.
 # class A: lighter, sport
-mpg_aA <- 30.95 - 2.52*2.8 - 0.03*300
-# 14.894 mpg Automatic
-mpg_aM <- 42.5 - 6.09*2.8 - 0.03*300
-# 16.448 mpg Manual
+mpg_aA <- b0.0 + bwt.0*2.8 - bhp*300
+mpg_aM <- b0.1 + (bwt.0 + bwt.1)*2.8 - bhp*300
 
 # class B: heavier, non-sport
-mpg_bA <- 30.95 - 2.52*5 - 0.03*150
-# 13.85 mpg Automatic
-mpg_bM <- 42.5 - 6.09*5 - 0.03*150
-# 7.55 mpg Manual
+mpg_bA <- b0.0 + bwt.0*5 - bhp*150
+mpg_bM <- b0.1 + (bwt.0 + bwt.1)*5 - bhp*150
 ```
 If you classify the models into **class A:** lighter, sport (high hp) & **class B:** heavier, work (low hp), then the model will predict that:
 
-- **class A:**  mpg (wt=2800 lbs, hp=300) = ```r mpg_aA``` Automatic < ```r mpg_aM``` Manual
-- **class B:**  mpg (wt=5000 lbs, hp=150) = ```r mpg_bA``` Automatic > ```r mpg_bM``` Manual
+- **class A:**  mpg (wt=2800 lbs, hp=300) = ```r mpg_aA``` Automatic :: ```r mpg_aM``` Manual
+- **class B:**  mpg (wt=5000 lbs, hp=150) = ```r mpg_bA``` Automatic :: ```r mpg_bM``` Manual
 
 \pagebreak
 
