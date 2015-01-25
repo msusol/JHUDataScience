@@ -1,8 +1,10 @@
 ---
-title: "Modeling Fuel Consumption in ('73-'74) Automobiles: Automatic vs. Manual Transmission."
+title: 'Modeling Fuel Consumption in (''73-''74) Automobiles: Automatic vs. Manual
+  Transmission.'
 author: "Mark Susol, mock writer for US Motor Trend Magazine"
 date: "21 January, 2015"
 output:
+  html_document: default
   pdf_document:
     fig_crop: no
 ---
